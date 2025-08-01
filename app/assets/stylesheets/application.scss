@@ -1,0 +1,72 @@
+@import "bootstrap";
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.card {
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.product-image {
+  height: 200px;
+  object-fit: cover;
+}
+
+.btn-primary {
+  background-color: #0066cc;
+  border-color: #0066cc;
+}
+
+.btn-primary:hover {
+  background-color: #0052a3;
+  border-color: #0052a3;
+}
+
+.text-primary {
+  color: #0066cc !important;
+}
+
+.bg-primary {
+  background-color: #0066cc !important;
+}
+
+.footer {
+  margin-top: auto;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+}
+
+.alert {
+  margin-bottom: 0;
+}
+
+.cart-item-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+}
+
+.product-card {
+  height: 100%;
+}
+
+.category-card {
+  border: 1px solid #dee2e6;
+  transition: box-shadow 0.15s ease-in-out;
+}
+
+.category-card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}

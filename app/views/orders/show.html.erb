@@ -1,0 +1,103 @@
+<div class="container my-4">
+  <div class="row">
+    <div class="col-md-8">
+      <h1>Order #<%= @order.order_number %></h1>
+      
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>Order Details</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Order Date:</strong> <%= @order.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+              <p><strong>Status:</strong> 
+                <span class="badge bg-<%= case @order.status
+                                        when 'pending' then 'warning'
+                                        when 'confirmed', 'processing' then 'primary'
+                                        when 'shipped' then 'info'
+                                        when 'delivered' then 'success'
+                                        when 'cancelled' then 'danger'
+                                        end %>">
+                  <%= @order.status.humanize %>
+                </span>
+              </p>
+            </div>
+            <div class="col-md-6">
+              <% if @order.shipped_at %>
+                <p><strong>Shipped:</strong> <%= @order.shipped_at.strftime("%B %d, %Y") %></p>
+              <% end %>
+              <% if @order.delivered_at %>
+                <p><strong>Delivered:</strong> <%= @order.delivered_at.strftime("%B %d, %Y") %></p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h5>Items Ordered</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @order_items.each do |item| %>
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <img src="<%= item.product.main_image %>" alt="<%= item.product.name %>" 
+                             class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                        <div>
+                          <h6><%= link_to item.product.name, item.product %></h6>
+                          <small class="text-muted">SKU: <%= item.product.sku %></small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>$<%= item.price.to_f %></td>
+                    <td><%= item.quantity %></td>
+                    <td><strong>$<%= item.total_price.to_f %></strong></td>
+                  </tr>
+                <% end %>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="3">Total</th>
+                  <th>$<%= @order.total_amount.to_f %></th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5>Shipping Information</h5>
+        </div>
+        <div class="card-body">
+          <% if @order.shipping_address.present? %>
+            <pre><%= @order.shipping_address %></pre>
+          <% else %>
+            <p class="text-muted">No shipping address provided</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mt-4">
+    <%= link_to "← Back to Orders", orders_path, class: "btn btn-outline-primary" %>
+  </div>
+</div>

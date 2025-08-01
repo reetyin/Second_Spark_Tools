@@ -1,0 +1,42 @@
+<div class="container my-5">
+  <!-- Hero Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="bg-primary text-white p-5 rounded">
+        <h1 class="display-4">Welcome to Second Spark Tools</h1>
+        <p class="lead">Your premier destination for quality used and refurbished power tools in Winnipeg, Manitoba. Giving tools a second life!</p>
+        <%= link_to "Shop Now", products_path, class: "btn btn-light btn-lg" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories Section -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <h2>Shop by Category</h2>
+      <div class="row">
+        <% @categories.each do |category| %>
+          <div class="col-md-4 mb-3">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><%= category.name %></h5>
+                <p class="card-text"><%= category.description %></p>
+                <%= link_to "Browse", products_path(category_id: category.id), class: "btn btn-primary" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured Products -->
+  <div class="row">
+    <div class="col-12">
+      <h2>Featured Products</h2>
+      <div class="row">
+        <%= render partial: 'shared/product_card', collection: @featured_products, as: :product %>
+      </div>
+    </div>
+  </div>
+</div>

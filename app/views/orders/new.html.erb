@@ -1,0 +1,65 @@
+<div class="container my-4">
+  <h1>Checkout</h1>
+  
+  <div class="row">
+    <div class="col-md-8">
+      <%= form_with model: @order, local: true do |form| %>
+        <% if @order.errors.any? %>
+          <div class="alert alert-danger">
+            <h4><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h4>
+            <ul>
+              <% @order.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5>Shipping Address</h5>
+          </div>
+          <div class="card-body">
+            <%= form.text_area :shipping_address, rows: 4, class: "form-control", 
+                               placeholder: "Enter your complete shipping address..." %>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5>Billing Address</h5>
+          </div>
+          <div class="card-body">
+            <%= form.text_area :billing_address, rows: 4, class: "form-control", 
+                               placeholder: "Enter your billing address (if different from shipping)..." %>
+            <small class="form-text text-muted">Leave blank if same as shipping address</small>
+          </div>
+        </div>
+
+        <div class="d-grid gap-2">
+          <%= form.submit "Place Order", class: "btn btn-success btn-lg" %>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5>Order Summary</h5>
+        </div>
+        <div class="card-body">
+          <% @current_cart.cart_items.each do |item| %>
+            <div class="d-flex justify-content-between mb-2">
+              <span><%= item.product.name %> (x<%= item.quantity %>)</span>
+              <span>$<%= (item.product.price * item.quantity).to_f %></span>
+            </div>
+          <% end %>
+          <hr>
+          <div class="d-flex justify-content-between">
+            <strong>Total: $<%= @current_cart.total_amount.to_f %></strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

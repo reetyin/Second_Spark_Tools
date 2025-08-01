@@ -1,0 +1,69 @@
+<div class="container my-4">
+  <h1>Shopping Cart</h1>
+  
+  <% if @cart_items.any? %>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @cart_items.each do |item| %>
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <img src="<%= item.product.main_image %>" alt="<%= item.product.name %>" 
+                       class="me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                  <div>
+                    <h6><%= link_to item.product.name, item.product %></h6>
+                    <small class="text-muted">SKU: <%= item.product.sku %></small>
+                  </div>
+                </div>
+              </td>
+              <td><%= item.product.formatted_price %></td>
+              <td>
+                <%= form_with model: item, url: cart_item_path(item), method: :patch, local: true do |form| %>
+                  <div class="input-group" style="width: 120px;">
+                    <%= form.number_field :quantity, value: item.quantity, min: 1, 
+                                         max: item.product.quantity, class: "form-control form-control-sm" %>
+                    <button type="submit" class="btn btn-outline-secondary btn-sm">Update</button>
+                  </div>
+                <% end %>
+              </td>
+              <td><strong>$<%= (item.product.price * item.quantity).to_f %></strong></td>
+              <td>
+                <%= link_to "Remove", cart_item_path(item), method: :delete, 
+                           class: "btn btn-sm btn-outline-danger",
+                           confirm: "Are you sure?" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="3">Total</th>
+            <th>$<%= @cart.total_amount.to_f %></th>
+            <th></th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    
+    <div class="d-flex justify-content-between">
+      <%= link_to "Continue Shopping", products_path, class: "btn btn-outline-primary" %>
+      <%= link_to "Checkout", new_order_path, class: "btn btn-success btn-lg" %>
+    </div>
+  <% else %>
+    <div class="text-center py-5">
+      <h3>Your cart is empty</h3>
+      <p>Add some products to get started!</p>
+      <%= link_to "Shop Now", products_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

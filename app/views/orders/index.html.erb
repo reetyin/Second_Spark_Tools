@@ -1,0 +1,48 @@
+<div class="container my-4">
+  <h1>My Orders</h1>
+  
+  <% if @orders.any? %>
+    <div class="row">
+      <% @orders.each do |order| %>
+        <div class="col-12 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-8">
+                  <h5 class="card-title">Order #<%= order.order_number %></h5>
+                  <p class="card-text">
+                    <small class="text-muted">Placed on <%= order.created_at.strftime("%B %d, %Y") %></small>
+                  </p>
+                  <p class="card-text">
+                    <span class="badge bg-<%= case order.status
+                                            when 'pending' then 'warning'
+                                            when 'confirmed', 'processing' then 'primary'
+                                            when 'shipped' then 'info'
+                                            when 'delivered' then 'success'
+                                            when 'cancelled' then 'danger'
+                                            end %>">
+                      <%= order.status.humanize %>
+                    </span>
+                  </p>
+                </div>
+                <div class="col-md-4 text-end">
+                  <h5>$<%= order.total_amount.to_f %></h5>
+                  <p><%= pluralize(order.total_items, 'item') %></p>
+                  <%= link_to "View Details", order, class: "btn btn-primary btn-sm" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <%= paginate @orders if respond_to?(:paginate) %>
+  <% else %>
+    <div class="text-center py-5">
+      <h3>No orders yet</h3>
+      <p>Start shopping to see your orders here!</p>
+      <%= link_to "Shop Now", products_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>
