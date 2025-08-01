@@ -9,7 +9,10 @@ if User.admin.exists?
   admin = User.admin.first
   puts "管理员已存在:"
   puts "邮箱: #{admin.email}"
-  puts "你可以用密码 'admin123' 登录"
+  
+  # 重置密码确保可以登录
+  admin.update!(password: 'admin123', password_confirmation: 'admin123')
+  puts "密码已重置为: admin123"
 else
   # 创建管理员用户
   admin = User.create!(
