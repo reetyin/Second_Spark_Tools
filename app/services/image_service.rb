@@ -12,17 +12,41 @@ class ImageService
   
   # 免费图片URL (无需API key的预设图片)
   DEFAULT_TOOL_IMAGES = [
-    'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400', # drill
-    'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=400', # tools
-    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400', # hammer
-    'https://images.unsplash.com/photo-1609205387707-91e3ca6c6b50?w=400', # wrench
-    'https://images.unsplash.com/photo-1609205387660-3f035e5f2474?w=400', # screwdriver
-    'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400', # power tools
-    'https://images.unsplash.com/photo-1609205387470-ee30b21faed1?w=400', # saw
-    'https://images.unsplash.com/photo-1609205387644-86ecaf1c2d50?w=400', # pliers
-    'https://images.unsplash.com/photo-1609205387707-91e3ca6c6b50?w=400', # toolkit
-    'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=400'  # workshop
+    'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=800&h=400&fit=crop', # drill
+    'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=800&h=400&fit=crop', # tools
+    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop', # hammer
+    'https://images.unsplash.com/photo-1609205387707-91e3ca6c6b50?w=800&h=400&fit=crop', # wrench
+    'https://images.unsplash.com/photo-1609205387660-3f035e5f2474?w=800&h=400&fit=crop', # screwdriver
+    'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=800&h=400&fit=crop', # power tools
+    'https://images.unsplash.com/photo-1609205387470-ee30b21faed1?w=800&h=400&fit=crop', # saw
+    'https://images.unsplash.com/photo-1609205387644-86ecaf1c2d50?w=800&h=400&fit=crop', # pliers
+    'https://images.unsplash.com/photo-1609205387707-91e3ca6c6b50?w=800&h=400&fit=crop', # toolkit
+    'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=800&h=400&fit=crop',  # workshop
+    'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&h=400&fit=crop', # workshop tools
+    'https://images.unsplash.com/photo-1609205387515-d7a63827fe65?w=800&h=400&fit=crop', # tool collection
+    'https://images.unsplash.com/photo-1613040809024-b4ef7ba99bc3?w=800&h=400&fit=crop', # garage tools
+    'https://images.unsplash.com/photo-1609205387493-c8b62bfe8248?w=800&h=400&fit=crop', # hand tools
+    'https://images.unsplash.com/photo-1609205387420-e8b0fa3e8af2?w=800&h=400&fit=crop'  # tool box
   ].freeze
+  
+  # 分类专用图片
+  CATEGORY_IMAGES = {
+    'Power Tools' => [
+      'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=300&fit=crop',
+      'https://images.unsplash.com/photo-1609205387470-ee30b21faed1?w=400&h=300&fit=crop',
+      'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&h=300&fit=crop'
+    ],
+    'Hand Tools' => [
+      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
+      'https://images.unsplash.com/photo-1609205387707-91e3ca6c6b50?w=400&h=300&fit=crop',
+      'https://images.unsplash.com/photo-1609205387644-86ecaf1c2d50?w=400&h=300&fit=crop'
+    ],
+    'Accessories' => [
+      'https://images.unsplash.com/photo-1609205387420-e8b0fa3e8af2?w=400&h=300&fit=crop',
+      'https://images.unsplash.com/photo-1609205387515-d7a63827fe65?w=400&h=300&fit=crop',
+      'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=400&h=300&fit=crop'
+    ]
+  }.freeze
   
   def self.search_tool_images(query, count = 1)
     # 尝试从Pixabay获取图片
@@ -37,18 +61,46 @@ class ImageService
   end
   
   def self.get_tool_image_for_category(category_name)
+    # 首先尝试从预设的分类图片中获取
+    category_images = CATEGORY_IMAGES[category_name]
+    if category_images && !category_images.empty?
+      return category_images.sample
+    end
+    
+    # 如果没有找到特定分类的图片，使用关键词搜索
     category_keywords = {
       'Power Tools' => 'power drill electric tool',
       'Hand Tools' => 'hammer wrench hand tool',
-      'Accessories' => 'tool accessories bits'
+      'Accessories' => 'tool accessories bits',
+      'Electric Tools' => 'electric power tools',
+      'Workshop' => 'workshop garage tools'
     }
     
     keyword = category_keywords[category_name] || 'tools equipment'
-    search_tool_images(keyword, 1).first
+    images = search_tool_images(keyword, 1)
+    
+    # 如果搜索失败，返回随机工具图片
+    images.first || get_random_tool_image
   end
   
   def self.get_random_tool_image
     DEFAULT_TOOL_IMAGES.sample
+  end
+  
+  # 获取英雄横幅图片
+  def self.get_hero_banner_image
+    hero_images = [
+      'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1200&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=1200&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1613040809024-b4ef7ba99bc3?w=1200&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=1200&h=600&fit=crop'
+    ]
+    hero_images.sample
+  end
+  
+  # 获取产品占位图片
+  def self.get_product_placeholder_image
+    'https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=300&h=300&fit=crop'
   end
   
   private
