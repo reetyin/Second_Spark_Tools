@@ -20,9 +20,34 @@ class UsersController < ApplicationController
     redirect_to login_path unless user_signed_in?
   end
 
+  def edit
+    @user = current_user
+    redirect_to login_path unless user_signed_in?
+  end
+
+  def update
+    @user = current_user
+    redirect_to login_path unless user_signed_in?
+    
+    if @user.update(user_update_params)
+      redirect_to user_path(@user), notice: 'Profile updated successfully!'
+    else
+      render :edit
+    end
+  end
+
   private
 
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation, :address)
+  end
+
+  def user_update_params
+    # Allow updating without password if password fields are empty
+    if params[:user][:password].blank?
+      params.require(:user).permit(:name, :email, :address)
+    else
+      params.require(:user).permit(:name, :email, :password, :password_confirmation, :address)
+    end
   end
 end
